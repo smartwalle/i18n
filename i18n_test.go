@@ -8,9 +8,13 @@ import (
 func TestLoad(t *testing.T) {
 	fmt.Println(Load("./langs"))
 
-	fmt.Println(T("key1"))
+	fmt.Println(T("name"))
 
-	SetDefault("zh_CN")
+	SetDefault("en")
+	fmt.Println(T("gender"))
 
-	fmt.Println(T("key1"))
+	SetDefault("cn")
+	fmt.Println(T("gender"))
+
+	fmt.Println(Exists("fr"), Exists("en"))
 }
