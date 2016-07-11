@@ -62,6 +62,10 @@ func (this *i18n) setDefault(lang string) {
 	}
 }
 
+func (this *i18n) Reset() {
+	this.config.Reset()
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 func Load(dir string) error {
 	return ctx.Load(dir)
