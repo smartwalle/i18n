@@ -2,11 +2,18 @@ package i18n
 
 import (
 	"github.com/smartwalle/config"
+	"sync"
+	"fmt"
 )
 
-var ctx *i18n = NewContext()
+var ctx *i18n
+var once sync.Once
 
-type message map[string]string
+func init() {
+	once.Do(func() {
+		ctx = NewContext()
+	})
+}
 
 type i18n struct {
 	config *config.Config
@@ -15,7 +22,7 @@ type i18n struct {
 
 func NewContext() *i18n {
 	var c = &i18n{}
-	c.config = config.NewConfig()
+	c.config = config.NewConfigWithBlock(false, true)
 	return c
 }
 
@@ -42,7 +49,7 @@ func (this *i18n) LoadFiles(files ...string) (err error) {
 }
 
 func (this *i18n) value(lang, key string) (value string) {
-	return this.config.ReadValue(lang, key)
+	return this.config.GetValue(lang, key)
 }
 
 func (this *i18n) exists(lang string) (ok bool) {
@@ -50,7 +57,9 @@ func (this *i18n) exists(lang string) (ok bool) {
 }
 
 func (this *i18n) setDefault(lang string) {
-	this.lang = lang
+	if this.exists(lang) {
+		this.lang = lang
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,9 +80,13 @@ func SetDefault(lang string) {
 }
 
 func TL(lang, key string) string {
-	return ctx.value(lang, key)
+	if ctx.exists(lang) {
+		ctx.value(lang, key)
+	}
+	return ctx.value(ctx.lang, key)
 }
 
 func T(key string) string {
+	fmt.Println(ctx.lang)
 	return ctx.value(ctx.lang, key)
 }
