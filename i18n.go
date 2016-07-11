@@ -42,7 +42,7 @@ func (this *i18n) LoadFiles(files ...string) (err error) {
 }
 
 func (this *i18n) value(lang, key string) (value string) {
-	return this.config.MustValue(lang, key, key)
+	return this.config.ReadValue(lang, key)
 }
 
 func (this *i18n) exists(lang string) (ok bool) {
