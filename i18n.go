@@ -1,9 +1,8 @@
 package i18n
 
 import (
-	"github.com/smartwalle/config"
+	"github.com/smartwalle/ini4go"
 	"sync"
-	"fmt"
 )
 
 var ctx *i18n
@@ -16,13 +15,13 @@ func init() {
 }
 
 type i18n struct {
-	config *config.Config
+	config *ini4go.Ini
 	lang   string
 }
 
 func NewContext() *i18n {
 	var c = &i18n{}
-	c.config = config.NewConfigWithBlock(false, true)
+	c.config = ini4go.New(false)
 	return c
 }
 
@@ -91,6 +90,5 @@ func TL(lang, key string) string {
 }
 
 func T(key string) string {
-	fmt.Println(ctx.lang)
 	return ctx.value(ctx.lang, key)
 }
